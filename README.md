@@ -96,7 +96,7 @@ public void CancelToast() // (Android Only) 출력중인 토스트 메시지를 
 <manifest ...>
   <application ...>
   </application>
-  __<uses-permission android:name="android.permission.CAMERA" />__
+  <uses-permission android:name="android.permission.CAMERA" />__
 </manifest>
 ```
 
