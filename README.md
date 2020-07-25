@@ -2,7 +2,7 @@
 유니티를 조금 더 편하게 사용할 수 있게 해주는 유니티 패키지입니다.
 
 ## SDSingleton
-싱글톤 디자인 패턴입니다. 싱글톤 적용을 원하는 클래스에 다음과 같이 상속받아 사용합니다.
+- 싱글톤 디자인 패턴입니다. 싱글톤 적용을 원하는 클래스에 다음과 같이 상속받아 사용합니다.
 
 <pre>
 <code>
@@ -17,7 +17,7 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
 <code>
 SDDeviceManager.I.DoSomthing();
 </code>
-<pre>
+</pre>
 
 ## SDSecurityManager
 - 싱글톤 변수로 접근하여 사용할 수 있습니다.
@@ -29,7 +29,7 @@ AES256 알고리즘을 사용하여 주어진 (문자열)데이터를 암호화 
 string encript = SDSecurityManager.I.Encrypt("Hello"); // print -> 설정한 Key, IV값에 따라 다르게 출력됩니다.
 string decrypt = SDSecurityManager.I.Decrypt(data); // print -> Hello
 </code>
-<pre>
+</pre>
 
 ## SDSecurityPlayerPrefs
 - 기본 PlayerPrefs를 래핑하는 클래스입니다. 암호화 / 복호화를 사용하여 유저가 데이터를 직접적으로 변경할 수 없도록 합니다.
@@ -56,7 +56,7 @@ public string GetString(string key, string defaultValue = "") // string 값을 �
 
 public float GetFloat(string key, float defaultValue = 0f) // float 값을 가져옵니다.
 </code>
-<pre>
+</pre>
 
 
 ## SDDeviceManager
@@ -85,7 +85,7 @@ public void ShowToast(string message, E_TOAST length = E_TOAST.LENGTH_SHORT) // 
 
 public void CancelToast() // (Android Only) 출력중인 토스트 메시지를 제거합니다.
 </code>
-<pre>
+</pre>
 
 ## GameObjectExtension, SDObjectManager
 - GameObject의 추가적인 Extension 함수가 있습니다.
@@ -100,6 +100,6 @@ public void SetActiveAfterSeconds(GameObject obj, bool active, float seconds = 0
 
 public void StopSetActive(GameObject obj) // 대기중인 SetActive가 있다면 취소합니다.
 </code>
-<pre>
+</pre>
 
 앞으로 계속 업데이트 될 예정입니다.
