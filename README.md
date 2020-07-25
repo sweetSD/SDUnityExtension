@@ -61,7 +61,9 @@ public float GetFloat(string key, float defaultValue = 0f) // float 값을 가�
 
 ## SDDeviceManager
 - 실행 기기에 대한 정보와 기본 세팅 변수들이 있습니다.
+<div>
 <img src="https://user-images.githubusercontent.com/29685039/88453266-5dae1380-cea0-11ea-889f-7b325d3eea34.png" width="40%" height="30%" title="SDDeviceManager" alt="SDDeviceManager"></img>
+</div>
 
 <pre>
 <code>
