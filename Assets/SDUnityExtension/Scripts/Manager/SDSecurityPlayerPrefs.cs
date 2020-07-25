@@ -13,7 +13,7 @@ public class SDSecurityPlayerPrefs : SDSingleton<SDSecurityPlayerPrefs>
 {
     private void Awake()
     {
-        SetInstance(this);
+        SetInstance(this, true);
     }
 
     #region Utility Functions

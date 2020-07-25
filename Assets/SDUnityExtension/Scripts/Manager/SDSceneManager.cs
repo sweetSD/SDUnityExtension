@@ -25,7 +25,7 @@ public class SDSceneManager : SDSingleton<SDSceneManager>
 
     private void Awake()
     {
-        SetInstance(this);
+        SetInstance(this, true);
     }
 
     #region Logic Functions

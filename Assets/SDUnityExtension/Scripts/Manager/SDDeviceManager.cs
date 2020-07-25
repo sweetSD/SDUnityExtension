@@ -93,6 +93,10 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     /// <summary>
     /// 기능 접근 권한 (필수적, 선택적)
     /// 
+    /// Plugins/Android/AndroidManifest.xml 파일에 해당 권한을 추가해주세요.
+    /// 
+    /// ex: <uses-permission android:name="android.permission.CAMERA" />
+    /// 
     /// Camera - android.permission.CAMERA
     /// Record Audio - android.permission.RECORD_AUDIO
     /// Fine Location - android.permission.ACCESS_FINE_LOCATION
@@ -107,6 +111,8 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
 
     private void Awake()
     {
+        SetInstance(this, true);
+
         Application.targetFrameRate = _targetFPS;
         Application.runInBackground = _isRunInBackground;
         Screen.sleepTimeout = _isNeverSleep ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
@@ -140,10 +146,14 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     /// </summary>
     private void RequestRequiredPermissions()
     {
-        if (_requiredPermission.Length > 0)
+        if (_requiredPermission == null || _requiredPermission.Length == 0)
+            return;
+
+        var checkResults = AndroidRuntimePermissions.CheckPermissions(_requiredPermission);
+        if (checkResults.Any((element) => element != AndroidRuntimePermissions.Permission.Granted))
         {
             var results = AndroidRuntimePermissions.RequestPermissions(_requiredPermission);
-            if (results.Any((result) => result == AndroidRuntimePermissions.Permission.Denied))
+            if (results.Any((result) => result != AndroidRuntimePermissions.Permission.Granted))
             {
                 ShowToast("게임 실행에 꼭 필요한 권한입니다.", E_TOAST.LENGTH_LONG);
                 AndroidRuntimePermissions.OpenSettings();
@@ -156,24 +166,31 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     /// </summary>
     private void RequestOptionalPermissions()
     {
-        if (_optionalPermission.Length > 0)
+        if (_optionalPermission == null || _optionalPermission.Length == 0)
+            return;
+        var checkResults = AndroidRuntimePermissions.CheckPermissions(_optionalPermission);
+        if (checkResults.Any((element) => element != AndroidRuntimePermissions.Permission.Granted))
         {
             AndroidRuntimePermissions.RequestPermissions(_requiredPermission);
         }
     }
 
+#if UNITY_ANDROID
     AndroidJavaObject _currentActivity;
     AndroidJavaClass _unityPlayer;
     AndroidJavaObject _context;
     AndroidJavaObject _toastInstance;
+#endif
 
     public void InitializeAndroidObjects()
     {
+#if UNITY_ANDROID
         _unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 
         _currentActivity = _unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
 
         _context = _currentActivity.Call<AndroidJavaObject>("getApplicationContext");
+#endif
     }
 
     /// <summary>
@@ -183,6 +200,7 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     /// <param name="length">Toast 메시지 출력 시간</param>
     public void ShowToast(string message, E_TOAST length = E_TOAST.LENGTH_SHORT)
     {
+#if UNITY_ANDROID
         _currentActivity.Call
         (
             "runOnUiThread",
@@ -200,6 +218,7 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
                 _toastInstance.Call("show");
             })
          );
+#endif
     }
 
     /// <summary>
@@ -207,13 +226,15 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     /// </summary>
     public void CancelToast()
     {
+#if UNITY_ANDROID
         _currentActivity.Call("runOnUiThread",
             new AndroidJavaRunnable(() =>
             {
                 if (_toastInstance != null) _toastInstance.Call("cancel");
             }));
+#endif
     }
 
 
-    #endregion
+#endregion
 }

@@ -19,6 +19,8 @@ public class SDSecurityManager : SDSingleton<SDSecurityManager>
 
     private void Awake()
     {
+        SetInstance(this, true);
+
         // AES 256 세팅
         _aes.KeySize = 256;
         _aes.BlockSize = 128;
@@ -26,8 +28,6 @@ public class SDSecurityManager : SDSingleton<SDSecurityManager>
         _aes.Padding = PaddingMode.PKCS7;
         _aes.Key = Encoding.UTF8.GetBytes(_securityKey);
         _aes.IV = _securityIv;
-
-        SetInstance(this);
     }
 
     /// <summary>
