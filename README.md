@@ -92,15 +92,13 @@ public void CancelToast() // (Android Only) 출력중인 토스트 메시지를 
 접근 권한 요청 기능은 [Android Runtime Permission](https://github.com/yasirkula/UnityAndroidRuntimePermissions)플러그인을 사용하였습니다.
 
 >접근 권한을 사용하기 위해서는 {Project}/Assets/Plugins/Android/AndroidManifest.xml 파일에 해당 권한에 대한 구문을 추가해야합니다.
-<pre>
-<code>
+```
 <manifest ...>
   <application ...>
   </application>
   __<uses-permission android:name="android.permission.CAMERA" />__
 </manifest>
-</code>
-</pre>
+```
 
 ## GameObjectExtension, SDObjectManager
 - GameObject의 추가적인 Extension 함수가 있습니다.
