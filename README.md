@@ -6,7 +6,7 @@
 
 <pre>
 <code>
-public class SDDeviceManager : SDSingleton<SDDeviceManager>
+public class SDDeviceManager : SDSingleton< SDDeviceManager >
 { ... }
 </code>
 </pre>
