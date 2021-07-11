@@ -24,7 +24,7 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     /// 목표 FPS입니다.
     /// </summary>
     [Tooltip("목표 FPS")]
-    [SerializeField] private int _targetFPS = 60;
+    [SerializeField] private int _targetFPS = 300;
     public int TargetFPS
     {
         get => _targetFPS;

@@ -23,6 +23,15 @@ public class SDSceneManager : SDSingleton<SDSceneManager>
     /// </summary>
     [SerializeField] private UnityEvent<float> _onSceneLoaded;
 
+    /// <summary>
+    /// 현재 씬의 이름
+    /// </summary>
+    static public string CurrentSceneName => SceneManager.GetActiveScene().name;
+    /// <summary>
+    /// 현재 씬의 Build Index
+    /// </summary>
+    static public int CurrentSceneIndex => SceneManager.GetActiveScene().buildIndex;
+
     private void Awake()
     {
         SetInstance(this, true);
@@ -34,24 +43,24 @@ public class SDSceneManager : SDSingleton<SDSceneManager>
     /// Build Settings의 Scene index를 이용하여 씬을 로드합니다.
     /// </summary>
     /// <param name="index">Build Settings의 Scene index</param>
-    public void LoadScene(int index)
+    /// <param name="uiName">씬 변경 화면 이펙트 프리팹 이름 (Resources 폴더 사용)</param>
+    public void LoadScene(int index, string uiName = "Common Transition UI")
     {
-        var ao = SceneManager.LoadSceneAsync(index);
         if (_progressCoroutine != null)
             StopCoroutine(_progressCoroutine);
-        _progressCoroutine = StartCoroutine(CO_SceneLoadProgress(ao));
+        _progressCoroutine = StartCoroutine(CO_SceneLoadProgress(uiName, index: index));
     }
 
     /// <summary>
     /// Build Settings의 Scene name을 이용하여 씬을 로드합니다.
     /// </summary>
     /// <param name="name">Build Settings의 Scene name</param>
-    public void LoadScene(string name)
+    /// <param name="uiName">씬 변경 화면 이펙트 프리팹 이름 (Resources 폴더 사용)</param>
+    public void LoadScene(string name, string uiName = "Common Transition UI")
     {
-        var ao = SceneManager.LoadSceneAsync(name);
         if (_progressCoroutine != null)
             StopCoroutine(_progressCoroutine);
-        _progressCoroutine = StartCoroutine(CO_SceneLoadProgress(ao));
+        _progressCoroutine = StartCoroutine(CO_SceneLoadProgress(uiName, name: name));
     }
 
     /// <summary>
@@ -59,14 +68,27 @@ public class SDSceneManager : SDSingleton<SDSceneManager>
     /// </summary>
     /// <param name="operation">SceneManager.LoadSceneAsync의 AsyncOperation</param>
     /// <returns></returns>
-    private IEnumerator CO_SceneLoadProgress(AsyncOperation operation)
+    private IEnumerator CO_SceneLoadProgress(string uiName, int index = 0, string name = "")
     {
-        while (operation.progress < 9.0f)
+        var transUI = Instantiate(Resources.Load("Prefab/UI/Transition/" + uiName) as GameObject).GetComponent<SDUITransition>().TransitionEffect;
+        DontDestroyOnLoad(transUI.transform.root.gameObject);
+        transUI.Show();
+        yield return new WaitUntil(() => transUI.effectFactor == 1);
+
+        AsyncOperation operation;
+        if (name.IsNotEmpty()) operation = SceneManager.LoadSceneAsync(name);
+        else operation = SceneManager.LoadSceneAsync(index);
+
+        while (operation.progress < 0.9f)
         {
             _onSceneLoadProgress?.Invoke(operation.progress);
             yield return null;
         }
         _onSceneLoaded?.Invoke(operation.progress);
+
+        transUI.Hide();
+        yield return new WaitUntil(() => transUI.effectFactor == 0);
+        Destroy(transUI.gameObject);
     }
 
     #endregion

@@ -10,6 +10,12 @@ using UnityEngine;
 /// </summary>
 public class SDObjectPool : MonoBehaviour
 {
+    static Dictionary<string, SDObjectPool> m_Pools = new Dictionary<string, SDObjectPool>();
+
+    [Header("Pool Info")]
+    [Tooltip("오브젝트 풀 이름입니다.")]
+    [SerializeField] protected string _poolName = "";
+
     [Header("Pool Objects")]
     [Tooltip("오브젝트 풀링에 사용될 오브젝트들입니다.")]
     [SerializeField] protected List<GameObject> _objectPool = null;
@@ -31,9 +37,14 @@ public class SDObjectPool : MonoBehaviour
     [Tooltip("오브젝트가 모두 사용중일 경우 새로 생성할지 여부입니다.")]
     [SerializeField] protected bool _flexible = true;
 
-    private void Start()
+    private void OnEnable()
     {
         Initialize();
+    }
+
+    private void OnDestroy()
+    {
+        DestroyPool();
     }
 
     /// <summary>
@@ -52,6 +63,11 @@ public class SDObjectPool : MonoBehaviour
             _objectPool[i].SetActive(false);
         }
 
+        var poolName = _poolName.IsNotEmpty() ? _poolName : _poolObject.name;
+        if (!m_Pools.ContainsKey(poolName))
+        {
+            m_Pools.Add(poolName, this);
+        }
     }
 
     /// <summary>
@@ -59,26 +75,45 @@ public class SDObjectPool : MonoBehaviour
     /// </summary>
     /// <param name="posVec3">위치</param>
     /// <param name="rotVec3">회전</param>
-    /// <param name="sclVec3">스케일</param>
+    /// <param name="scaleVec3">스케일</param>
+    /// <param name="doNotActive">오브젝트를 활성화 하지 않고 반환할지 여부</param>
     /// <returns></returns>
-    public virtual T ActiveObject<T>(Vector3 posVec3, Vector3 rotVec3, Vector3 sclVec3) where T : MonoBehaviour
+    public virtual T ActiveObject<T>(Vector3 posVec3, Vector3 rotVec3, Vector3? scaleVec3 = null, bool doNotActive = false) where T : Component
+    {
+        return ActiveObject(posVec3, Quaternion.Euler(rotVec3), scaleVec3 ?? Vector3.one, doNotActive).GetComponent<T>();
+    }
+
+    public virtual T ActiveObject<T>(Vector3 posVec3, Quaternion rot, Vector3? scaleVec3 = null, bool doNotActive = false) where T : Component
+    {
+        return ActiveObject(posVec3, rot, scaleVec3 ?? Vector3.one, doNotActive).GetComponent<T>();
+    }
+
+    public virtual GameObject ActiveObject(Vector3 posVec3, Quaternion rot, Vector3? sclVec3 = null, bool doNotActive = false)
     {
         for (int i = 0; i < _objectPool.Count; i++)
         {
-            if(!_objectPool[i].activeSelf)
+            if (!_objectPool[i].activeSelf)
             {
                 var objTransform = _objectPool[i].transform;
                 objTransform.localPosition = posVec3;
-                objTransform.localEulerAngles = rotVec3;
-                objTransform.localScale = sclVec3;
-                objTransform.gameObject.SetActive(true);
-                return typeof(T).Equals(typeof(GameObject)) ? objTransform.gameObject as T : objTransform.GetComponent<T>();
+                objTransform.rotation = rot;
+                objTransform.localScale = sclVec3 ?? Vector3.one;
+
+                objTransform.gameObject.SetActive(!doNotActive);
+
+                // 한번 사용한 오브젝트를 리스트 제일 하위로 이동
+                _objectPool.RemoveAt(i);
+                _objectPool.Add(objTransform.gameObject);
+
+                return objTransform.gameObject;
             }
         }
         if (_flexible)
         {
-            _objectPool.Add(Instantiate(_poolObject, Vector3.zero, Quaternion.identity, _poolRoot));
-            return typeof(T).Equals(typeof(GameObject)) ? _objectPool[_objectPool.Count - 1] as T : _objectPool[_objectPool.Count - 1].GetComponent<T>();
+            var objInst = Instantiate(_poolObject, posVec3, rot, _poolRoot);
+            objInst.SetActive(!doNotActive);
+            _objectPool.Add(objInst);
+            return objInst;
         }
         else
             return null;
@@ -94,5 +129,20 @@ public class SDObjectPool : MonoBehaviour
             Destroy(_objectPool[i]);
         }
         _objectPool.Clear();
+
+        var poolName = _poolName.IsNotEmpty() ? _poolName : _poolObject.name;
+        if (m_Pools.ContainsKey(poolName))
+        {
+            m_Pools.Remove(poolName);
+        }
     }
+
+    #region STATIC_FUNCTIONS
+    public static SDObjectPool GetPool(string name)
+    {
+        SDObjectPool p;
+        m_Pools.TryGetValue(name, out p);
+        return p;
+    }
+    #endregion
 }
