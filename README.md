@@ -1,6 +1,15 @@
 # SDUnityExtension
 유니티를 조금 더 편하게 사용할 수 있게 해주는 유니티 패키지입니다.
 
+## Installation
+이 패키지는 [DoTween](http://dotween.demigiant.com/, "DoTween link")과 [UIEffect](https://github.com/mob-sakai/UIEffect/blob/upm/README.md, "UIEffect link")를 dependency로 사용됩니다.
+
+{Project}\Packages\manifest.json -> "com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git" 을 추가합니다.
+
+DoTween은 기본적으로 패키지 내에 내장되어 있으므로 필요시 추가로 업데이트하여 사용하시면 됩니다.
+
+**기능을 정상적으로 사용하기 위해서 패키지 Import 후 SDUnityExtension/Create Manager Prefab 버튼을 눌러서 씬에 매니저 오브젝트를 생성하여야 합니다.**
+
 ## SDSingleton
 - 싱글톤 디자인 패턴입니다. 싱글톤 적용을 원하는 클래스에 다음과 같이 상속받아 사용합니다.
 
@@ -18,6 +27,8 @@ public class SDDeviceManager : SDSingleton< SDDeviceManager >
 SDDeviceManager.I.DoSomthing();
 </code>
 </pre>
+
+DontDestroyOnLoad를 사용하고싶으면 Awake 혹은 Start 함수 등에서 SetInstance(this); 함수를 호출하면 됩니다.
 
 ## SDSecurityManager
 - 싱글톤 변수로 접근하여 사용할 수 있습니다.
@@ -100,6 +111,25 @@ public void CancelToast() // (Android Only) 출력중인 토스트 메시지를 
 </manifest>
 ```
 
+## SDSceneManager
+- 씬을 로딩하는 매니저 클래스입니다.
+
+```
+public void LoadScene(int index, string uiName = "Common Transition UI") // UITransition을 사용하여 주어진 씬 인덱스로 씬을 로딩합니다. uiName은 Resources\Prefab\UI\Transition 폴더 내에 있는 프리팹의 이름입니다.
+
+public void LoadScene(string name, string uiName = "Common Transition UI") // UITransition을 사용하여 주어진 씬 이름으로 씬을 로딩합니다. uiName은 Resources\Prefab\UI\Transition 폴더 내에 있는 프리팹의 이름입니다.S
+
+// 아래의 이벤트 리스너는 모두 씬 로딩 AsyncOperation의 progress 변수를 전달합니다.
+
+public void AddProgressListener(UnityAction<float> action) // 씬 로딩 진행도를 받을 이벤트 리스너를 등록합니다. 씬 로딩 progress가 변경될 때 마다 이벤트가 발생합니다.
+
+public void RemoveProgressListener(UnityAction<float> action) // 씬 로딩 진행도 이벤트 리스너를 삭제합니다.
+
+public void AddLoadedListener(UnityAction<float> action) // 씬 로딩이 완료되었을 때 발생하는 이벤트 리스너를 등록합니다.
+
+public void RemoveLoadedListener(UnityAction<float> action) // 씬 로딩이 완료되었을 때 발생하는 이벤트 리스너를 삭제합니다.
+```
+
 ## GameObjectExtension, SDObjectManager
 - GameObject의 추가적인 Extension 함수가 있습니다.
 
@@ -114,5 +144,72 @@ public void SetActiveAfterSeconds(GameObject obj, bool active, float seconds = 0
 public void StopSetActive(GameObject obj) // 대기중인 SetActive가 있다면 취소합니다.
 </code>
 </pre>
+
+## SDAudioManager
+- AudioSource의 FadeIn / FadeOut 효과를 줍니다.
+
+<pre>
+<code>
+AudioSource audioSource = GetComponent<AudioSource>();
+audioSource.FadeIn(1f);
+audioSource.FadeOut(1f);
+</code>
+</pre>
+
+## SDObjectPool
+- 오브젝트 풀 사용을 도와주는 스크립트입니다.
+
+```
+string PoolName; // 오브젝트 풀의 이름입니다.
+
+List<GameObject> ObjectPool; // 생성된 오브젝트들을 관리하는 List입니다.
+
+GameObject PoolObject; // 풀링할 오브젝트입니다.
+
+int InitialSize; // 처음 생성할 오브젝트 풀의 사이즈입니다.
+
+Transform PoolRoot; // 생성된 오브젝트들의 부모가 될 Transform입니다.
+
+bool Flexible; // 오브젝트 요청 시 풀의 오브젝트를 모두 사용중일 경우 추가로 생성할지 여부입니다.
+
+/// <summary>
+/// 오브젝트 풀에서 오브젝트 하나를 가져옵니다.
+/// </summary>
+/// <param name="posVec3">위치</param>
+/// <param name="rotVec3">회전</param>
+/// <param name="scaleVec3">스케일</param>
+/// <param name="doNotActive">오브젝트를 활성화 하지 않고 반환할지 여부</param>
+/// <returns>T 형식으로 변환된 오브젝트</returns>
+public T ActiveObject<T>(Vector3 posVec3, Vector3 rotVec3, Vector3? scaleVec3 = null, bool doNotActive = false) where T : Component
+public T ActiveObject<T>(Vector3 posVec3, Quaternion rot, Vector3? scaleVec3 = null, bool doNotActive = false) where T : Component
+  
+public GameObject ActiveObject(Vector3 posVec3, Quaternion rot, Vector3? sclVec3 = null, bool doNotActive = false) // GameObject로 반환합니다.
+  
+public static SDObjectPool GetPool(string name) // 오브젝트 풀의 이름으로 풀을 가져옵니다.
+
+```
+
+## SDMath
+- Unity의 Mathf에는 없는 추가적인 수학 함수를 제공합니다.
+
+```
+SDMath.Map(value, in_min, in_max, out_min, out_max)
+주어진 in 구간의 value를 out 구간의 값으로 변환합니다.
+Ex. (value = 10. in_min = 0, in_max = 100, out_min = 0, out_max = 1) -> return 0.1
+```
+
+## DoTween Extension
+- DoTween의 기능을 편하게 사용할 수 있도록 도와주는 스크립트입니다. 추가적인 스크립트를 사용하지 않고 컴포넌트를 추가하여 사용할 수 있습니다.
+
+- DoBase.cs - 확장 스크립트의 기반이 되는 클래스입니다. 공통적으로 사용되는 값들을 가지고 있습니다.
+- DoController.cs - DoBase를 상속한 모든 클래스를 관리하는 클래스입니다.
+- DoColor.cs - SpriteRenderer의 color를 사용합니다.
+- DoPosition.cs - Transform의 position을 사용합니다.
+- DoRotation.cs - Transform의 rotation을 사용합니다.
+- DoScale.cs - Transform의 localScale을 사용합니다.
+- DoUIColor.cs - Graphic 클래스를 상속받은 UI의 color를 사용합니다.
+- DoUIFade.cs - CanvasGroup의 alpha를 사용합니다.
+- DoUIFill.cs - Image 클래스의 fillAmount를 사용합니다.
+- DoUIPosition.cs - RectTransform의 anchoredPosition를 사용합니다.
 
 앞으로 계속 업데이트 될 예정입니다.
