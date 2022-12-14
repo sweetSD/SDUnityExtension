@@ -2,9 +2,7 @@
 유니티를 조금 더 편하게 사용할 수 있게 해주는 유니티 패키지입니다.
 
 ## Installation
-{Project}\Packages\manifest.json -> "com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git" 을 추가합니다.
-
-DoTween은 기본적으로 패키지 내에 내장되어 있으므로 필요시 추가로 업데이트하여 사용하시면 됩니다.
+DoTween, AndroidRuntimePermission는 기본적으로 패키지 내에 내장되어 있으므로 필요시 추가로 업데이트하여 사용하시면 됩니다.
 
 **기능을 정상적으로 사용하기 위해서 패키지 Import 후 SDUnityExtension/Create Manager Prefab 버튼을 눌러서 씬에 매니저 오브젝트를 생성하여야 합니다.**
 
