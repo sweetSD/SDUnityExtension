@@ -6,4 +6,9 @@ public static class SDArrayExtension
     {
         for (int i = 0; i < array.Length; i++) action(array[i]);
     }
+    
+    public static void ForEach<T>(this T[] array, System.Action<T, int> action)
+    {
+        for (int i = 0; i < array.Length; i++) action(array[i], i);
+    }
 }

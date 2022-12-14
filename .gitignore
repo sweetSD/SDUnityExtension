@@ -58,3 +58,6 @@ sysinfo.txt
 crashlytics-build.properties
 
 *.meta
+.idea
+.vsconfig
+Assets/Plugins/Sirenix

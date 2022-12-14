@@ -19,6 +19,7 @@ namespace DG
             [SerializeField] protected int _loopCount = 0;
             [SerializeField] protected LoopType _loopType = LoopType.Restart;
             [SerializeField] protected Ease _ease = Ease.Linear;
+            [SerializeField] protected UpdateType _updateType = UpdateType.Normal;
             [SerializeField] protected UnityEvent _onComplete;
             protected Sequence _sequence = null;
 
@@ -36,6 +37,7 @@ namespace DG
                 if (_playOrigin) ResetToStart();
                 _sequence.SetDelay(_startDelay);
                 _sequence.SetLoops(_loopCount, _loopType);
+                _sequence.SetUpdate(_updateType);
                 _sequence.OnComplete(() => _onComplete?.Invoke());
                 _sequence.Play();
             }
@@ -46,6 +48,7 @@ namespace DG
                 if (_playOrigin) ResetToEnd();
                 _sequence.SetDelay(_startReverseDelay);
                 _sequence.SetLoops(_loopCount, _loopType);
+                _sequence.SetUpdate(_updateType);
                 _sequence.OnComplete(() => _onComplete?.Invoke());
                 _sequence.Play();
             }

@@ -69,7 +69,7 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     /// 화면 회전
     /// </summary>
     [Tooltip("화면 회전")]
-    [SerializeField] private ScreenOrientation _screenOrientation = ScreenOrientation.Landscape;
+    [SerializeField] private ScreenOrientation _screenOrientation = ScreenOrientation.LandscapeLeft;
     public ScreenOrientation ScreenOrientation
     {
         get => _screenOrientation;
@@ -90,6 +90,7 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     /// </summary>
     public float ScreenHeight => Screen.height;
 
+#if UNITY_ANDROID
     /// <summary>
     /// 기능 접근 권한 (필수적, 선택적)
     /// 
@@ -108,6 +109,7 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     [SerializeField] private string[] _requiredPermission;
     [Tooltip("선택 접근 권한 (ex. android.permission.READ_EXTERNAL_STORAGE)")]
     [SerializeField] private string[] _optionalPermission;
+#endif
 
     private void Awake()
     {
@@ -123,10 +125,11 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
         {
             InitializeAndroidObjects();
 
+            #if UNITY_ANDROID
+            //RequestRequiredPermissions();
 
-            RequestRequiredPermissions();
-
-            RequestOptionalPermissions();
+            //RequestOptionalPermissions();
+            #endif
         }
     }
 
@@ -134,12 +137,15 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
     {
         if(!pause)
         {
-            RequestRequiredPermissions();
+            #if UNITY_ANDROID
+            //RequestRequiredPermissions();
+            #endif
         }
     }
 
     #region Logic Functions
-
+    
+#if UNITY_ANDROID
     /// <summary>
     /// 필수적 접근 권한을 사용자에게 요청합니다.
     /// (필수적 권한이 취소되면 권한 세팅 페이지로 이동합니다.)
@@ -174,6 +180,8 @@ public class SDDeviceManager : SDSingleton<SDDeviceManager>
             AndroidRuntimePermissions.RequestPermissions(_requiredPermission);
         }
     }
+#endif
+    
 
 #if UNITY_ANDROID
     AndroidJavaObject _currentActivity;

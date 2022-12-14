@@ -18,4 +18,15 @@ public static class SDAudioExtension
     {
         SDAudioManager.I.FadeOut(source, duration, volume);
     }
+
+    public static void PlayClip(this AudioSource source, AudioClip clip, float volume = 1f, float pitch = 1f)
+    {
+        if (clip)
+        {
+            source.volume = volume;
+            source.pitch = pitch;
+            source.clip = clip;
+            source.Play();
+        }
+    }
 }

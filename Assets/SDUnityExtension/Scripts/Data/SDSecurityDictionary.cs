@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public class SDSecurityDictionary
 {
@@ -23,18 +21,18 @@ public class SDSecurityDictionary
     /// <returns></returns>
     public string this[string key]
     {
-        get => SDSecurityManager.I.Decrypt(_internalMap[key]);
-        set => _internalMap[key] = SDSecurityManager.I.Encrypt(value);
+        get => SDSecurityManager.Decrypt(_internalMap[key]);
+        set => _internalMap[key] = SDSecurityManager.Encrypt(value);
     }
 
     public void Add<T1, T2>(T1 key, T2 value)
     {
-        _internalMap.Add(SDSecurityManager.I.Encrypt(key.ToString()), SDSecurityManager.I.Encrypt(value.ToString()));
+        _internalMap.Add(SDSecurityManager.Encrypt(key.ToString()), SDSecurityManager.Encrypt(value.ToString()));
     }
 
     public void Remove<T>(T key)
     {
-        _internalMap.Remove(SDSecurityManager.I.Encrypt(key.ToString()));
+        _internalMap.Remove(SDSecurityManager.Encrypt(key.ToString()));
     }
 
     public void Clear()
@@ -54,9 +52,9 @@ public class SDSecurityDictionary
     public bool TryGetValue<T>(T key, out string value)
     {
         string tempValue = null;
-        if(_internalMap.TryGetValue(SDSecurityManager.I.Encrypt(key.ToString()), out tempValue))
+        if(_internalMap.TryGetValue(SDSecurityManager.Encrypt(key.ToString()), out tempValue))
         {
-            value = SDSecurityManager.I.Decrypt(tempValue);
+            value = SDSecurityManager.Decrypt(tempValue);
             return true;
         }
         else
@@ -68,12 +66,12 @@ public class SDSecurityDictionary
 
     public bool ContainsKey<T>(T key)
     {
-        return _internalMap.ContainsKey(SDSecurityManager.I.Encrypt(key.ToString()));
+        return _internalMap.ContainsKey(SDSecurityManager.Encrypt(key.ToString()));
     }
 
     public bool ContainsValue<T>(T value)
     {
-        return _internalMap.ContainsValue(SDSecurityManager.I.Encrypt(value.ToString()));
+        return _internalMap.ContainsValue(SDSecurityManager.Encrypt(value.ToString()));
     }
 
     #endregion
@@ -82,27 +80,27 @@ public class SDSecurityDictionary
 
     public int GetIntValue<T>(T key)
     {
-        return int.Parse(this[SDSecurityManager.I.Encrypt(key.ToString())]);
+        return int.Parse(this[SDSecurityManager.Encrypt(key.ToString())]);
     }
 
     public float GetFloatValue<T>(T key)
     {
-        return float.Parse(this[SDSecurityManager.I.Encrypt(key.ToString())]);
+        return float.Parse(this[SDSecurityManager.Encrypt(key.ToString())]);
     }
 
     public string GetStringValue<T>(T key)
     {
-        return this[SDSecurityManager.I.Encrypt(key.ToString())];
+        return this[SDSecurityManager.Encrypt(key.ToString())];
     }
 
     public double GetDoubleValue<T>(T key)
     {
-        return double.Parse(this[SDSecurityManager.I.Encrypt(key.ToString())]);
+        return double.Parse(this[SDSecurityManager.Encrypt(key.ToString())]);
     }
 
     public decimal GetDecimalValue<T>(T key)
     {
-        return decimal.Parse(this[SDSecurityManager.I.Encrypt(key.ToString())]);
+        return decimal.Parse(this[SDSecurityManager.Encrypt(key.ToString())]);
     }
 
     #endregion

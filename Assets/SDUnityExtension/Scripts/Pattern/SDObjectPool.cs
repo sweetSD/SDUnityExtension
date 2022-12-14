@@ -54,7 +54,7 @@ public class SDObjectPool : MonoBehaviour
     public virtual void Initialize()
     {
         if (_poolRoot == null)
-            _poolRoot = GetComponent<Transform>();
+            _poolRoot = transform;
 
         _objectPool = new LinkedList<GameObject>();
 
@@ -64,10 +64,10 @@ public class SDObjectPool : MonoBehaviour
             _objectPool.Last.Value.SetActive(false);
         }
 
-        var poolName = _poolName.IsNotEmpty() ? _poolName : _poolObject.name;
-        if (!m_Pools.ContainsKey(poolName))
+        _poolName = _poolName.IsNotEmpty() ? _poolName : _poolObject.name;
+        if (!m_Pools.ContainsKey(_poolName))
         {
-            m_Pools.Add(poolName, this);
+            m_Pools.Add(_poolName, this);
         }
     }
 
@@ -81,12 +81,26 @@ public class SDObjectPool : MonoBehaviour
     /// <returns></returns>
     public virtual T ActiveObject<T>(Vector3 posVec3, Vector3 rotVec3, Vector3? scaleVec3 = null, bool doNotActive = false) where T : Component
     {
-        return ActiveObject(posVec3, Quaternion.Euler(rotVec3), scaleVec3 ?? Vector3.one, doNotActive).GetComponent<T>();
+        return ActiveObject(posVec3, Quaternion.Euler(rotVec3), scaleVec3, doNotActive).GetComponent<T>();
     }
 
     public virtual T ActiveObject<T>(Vector3 posVec3, Quaternion rot, Vector3? scaleVec3 = null, bool doNotActive = false) where T : Component
     {
-        return ActiveObject(posVec3, rot, scaleVec3 ?? Vector3.one, doNotActive).GetComponent<T>();
+        return ActiveObject(posVec3, rot, scaleVec3, doNotActive).GetComponent<T>();
+    }
+    
+    /// <summary>
+    /// 자신의 오브젝트 Transform을 기준으로 오브젝트를 활성화 시킵니다.
+    /// </summary>
+    /// <returns></returns>
+    public virtual void ActiveObject()
+    {
+        ActiveObject(transform.position, transform.rotation, transform.localScale);
+    }
+    
+    public virtual GameObject ActiveObject(Transform t)
+    {
+        return ActiveObject(t.position, t.rotation, t.localScale);
     }
 
     public virtual GameObject ActiveObject(Vector3 posVec3, Quaternion rot, Vector3? sclVec3 = null, bool doNotActive = false)
@@ -96,9 +110,10 @@ public class SDObjectPool : MonoBehaviour
             if (!obj.activeSelf)
             {
                 var objTransform = obj.transform;
-                objTransform.localPosition = posVec3;
+                objTransform.position = posVec3;
                 objTransform.rotation = rot;
-                objTransform.localScale = sclVec3 ?? Vector3.one;
+                if (sclVec3.HasValue)
+                    objTransform.localScale = sclVec3.Value;
 
                 objTransform.gameObject.SetActive(!doNotActive);
 
@@ -129,11 +144,10 @@ public class SDObjectPool : MonoBehaviour
             Destroy(obj);
         }
         _objectPool.Clear();
-
-        var poolName = _poolName.IsNotEmpty() ? _poolName : _poolObject.name;
-        if (m_Pools.ContainsKey(poolName))
+        
+        if (m_Pools.ContainsKey(_poolName))
         {
-            m_Pools.Remove(poolName);
+            m_Pools.Remove(_poolName);
         }
     }
 

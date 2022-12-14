@@ -70,11 +70,6 @@ public class SDSceneManager : SDSingleton<SDSceneManager>
     /// <returns></returns>
     private IEnumerator CO_SceneLoadProgress(string uiName, int index = 0, string name = "")
     {
-        var transUI = Instantiate(Resources.Load("Prefab/UI/Transition/" + uiName) as GameObject).GetComponent<SDUITransition>().TransitionEffect;
-        DontDestroyOnLoad(transUI.transform.root.gameObject);
-        transUI.Show();
-        yield return new WaitUntil(() => transUI.effectFactor == 1);
-
         AsyncOperation operation;
         if (name.IsNotEmpty()) operation = SceneManager.LoadSceneAsync(name);
         else operation = SceneManager.LoadSceneAsync(index);
@@ -85,10 +80,6 @@ public class SDSceneManager : SDSingleton<SDSceneManager>
             yield return null;
         }
         _onSceneLoaded?.Invoke(operation.progress);
-
-        transUI.Hide();
-        yield return new WaitUntil(() => transUI.effectFactor == 0);
-        Destroy(transUI.gameObject);
     }
 
     #endregion

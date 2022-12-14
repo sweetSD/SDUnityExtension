@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,29 +11,39 @@ using UnityEngine;
 /// <typeparam name="T"></typeparam>
 public class SDSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private static T _instance = null;
+    private static T instance = null;
 
     public static T I
     {
-        get
-        {
-            if (_instance == null)
-                _instance = FindObjectOfType<T>();
-            if (_instance == null)
+        get {
+#if UNITY_EDITOR
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+                return null;
+#endif
+            if (instance == null)
+                instance = FindObjectOfType<T>();
+            if (instance == null)
             {
-                throw new System.Exception($"{typeof(T)}의 인스턴스를 찾을 수 없습니다.");
+                var go = new GameObject($"[{typeof(T).Name} Singleton]");
+                instance = go.AddComponent<T>();
             }
-            return _instance;
+            return instance;
         }
     }
 
     protected void SetInstance(T inst, bool dontDestroyOnLoad = true)
     {
-        if (_instance != null)
-            throw new System.Exception($"{typeof(T)}의 인스턴스가 이미 설정되어있습니다. 두개 이상의 싱글톤를 배치하셨나요?");
-        _instance = inst;
-        if (dontDestroyOnLoad)
-            DontDestroyOnLoad(_instance);
+        if (instance != null && instance != inst)
+        {
+            Debug.LogWarning($"{typeof(T)}의 인스턴스가 이미 설정되어있습니다. 두개 이상의 싱글톤를 배치하셨나요?");
+            Destroy(inst);
+        }
+        else
+        {
+            instance = inst;
+            if (dontDestroyOnLoad)
+                DontDestroyOnLoad(gameObject);
+        }
     }
 
 }

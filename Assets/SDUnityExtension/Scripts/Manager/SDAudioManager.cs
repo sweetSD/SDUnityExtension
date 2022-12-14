@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,11 @@ using UnityEngine;
 /// </summary>
 public class SDAudioManager : SDSingleton<SDAudioManager>
 {
+    private void Awake()
+    {
+        SetInstance(this);
+    }
+
     public void FadeIn(AudioSource source, float duration, float volume = 1f)
     {
         StartCoroutine(CO_FadeIn(source, duration, volume));

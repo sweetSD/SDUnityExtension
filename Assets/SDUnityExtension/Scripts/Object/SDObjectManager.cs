@@ -29,6 +29,11 @@ public static class GameObjectExtension
 public class SDObjectManager : SDSingleton<SDObjectManager>
 {
     private Dictionary<GameObject, Coroutine> _setActiveCoroutines = new Dictionary<GameObject, Coroutine>();
+    
+    private void Awake()
+    {
+        SetInstance(this);
+    }
 
     /// <summary>
     /// seconds 초 뒤에 해당 obj를 active 상태로 바꿉니다.
@@ -62,6 +67,6 @@ public class SDObjectManager : SDSingleton<SDObjectManager>
     {
         float eleapsed = 0f;
         while((eleapsed += Time.deltaTime) < seconds) { yield return null; }
-        obj.SetActive(active);
+        if (obj != null) obj.SetActive(active);
     }
 }

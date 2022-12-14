@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 /// <summary>
@@ -31,23 +28,23 @@ public class SDSecurityList
     /// <returns></returns>
     public string this[int key]
     {
-        get => SDSecurityManager.I.Decrypt(_internalList[key]);
-        set => _internalList[key] = SDSecurityManager.I.Encrypt(value);
+        get => SDSecurityManager.Decrypt(_internalList[key]);
+        set => _internalList[key] = SDSecurityManager.Encrypt(value);
     }
 
     public void Add<T>(T value)
     {
-        _internalList.Add(SDSecurityManager.I.Encrypt(value.ToString()));
+        _internalList.Add(SDSecurityManager.Encrypt(value.ToString()));
     }
 
     public void AddRange<T>(IEnumerable<T> values)
     {
-        _internalList.AddRange(values.Select((value) => SDSecurityManager.I.Encrypt(value.ToString())));
+        _internalList.AddRange(values.Select((value) => SDSecurityManager.Encrypt(value.ToString())));
     }
 
     public void Remove<T>(T value)
     {
-        _internalList.Remove(SDSecurityManager.I.Encrypt(value.ToString()));
+        _internalList.Remove(SDSecurityManager.Encrypt(value.ToString()));
     }
 
     public void RemoveAt(int index)

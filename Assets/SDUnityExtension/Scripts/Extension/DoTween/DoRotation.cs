@@ -10,12 +10,12 @@ namespace DG
         {
             public override Tween GetTween()
             {
-                return transform.DORotate(_destValue, _duration).SetEase(_ease);
+                return transform.DOLocalRotate(_destValue, _duration).SetEase(_ease);
             }
 
             public override Tween GetReversedTween()
             {
-                return transform.DORotate(_originValue, _duration).SetEase(_ease);
+                return transform.DOLocalRotate(_originValue, _duration).SetEase(_ease);
             }
 
             public override void ResetToStart()

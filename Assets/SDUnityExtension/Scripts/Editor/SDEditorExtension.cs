@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 /// <summary>
@@ -11,7 +9,7 @@ using UnityEditor;
 /// </summary>
 public class SDEditorExtension : MonoBehaviour
 {
-    [MenuItem("SDUnityExtension/Create Manager Prefab")]
+    [MenuItem("Tools/SDUnityExtension/Create Manager Prefab")]
     public static void CreateManagerPrefab()
     {
         var mngObject = Resources.Load<GameObject>("Prefab/SDManager");
