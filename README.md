@@ -2,8 +2,6 @@
 유니티를 조금 더 편하게 사용할 수 있게 해주는 유니티 패키지입니다.
 
 ## Installation
-이 패키지는 [DoTween](http://dotween.demigiant.com/, "DoTween link")과 [UIEffect](https://github.com/mob-sakai/UIEffect/blob/upm/README.md, "UIEffect link")를 dependency로 사용됩니다.
-
 {Project}\Packages\manifest.json -> "com.coffee.ui-effect": "https://github.com/mob-sakai/UIEffect.git" 을 추가합니다.
 
 DoTween은 기본적으로 패키지 내에 내장되어 있으므로 필요시 추가로 업데이트하여 사용하시면 됩니다.
