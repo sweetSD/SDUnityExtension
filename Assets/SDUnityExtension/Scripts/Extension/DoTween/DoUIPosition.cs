@@ -9,31 +9,33 @@ namespace DG
     {
         public class DoUIPosition : DoBase
         {
-            private RectTransform _rectTransform;
+            [SerializeField] private RectTransform rectTransform;
+            [SerializeField] private Vector2 originPosition;
+            [SerializeField] private Vector2 destPosition;
 
             private void Awake()
             {
-                if (_rectTransform == null) _rectTransform = GetComponent<RectTransform>();
+                if (rectTransform == null) rectTransform = GetComponent<RectTransform>();
             }
 
             public override Tween GetTween()
             {
-                return _rectTransform.DOAnchorPos(_destValue, _duration).SetEase(_ease);
+                return rectTransform.DOAnchorPos(destPosition, duration).SetEase(ease);
             }
 
             public override Tween GetReversedTween()
             {
-                return _rectTransform.DOAnchorPos(_originValue, _duration).SetEase(_ease);
+                return rectTransform.DOAnchorPos(originPosition, duration).SetEase(ease);
             }
 
             public override void ResetToStart()
             {
-                _rectTransform.anchoredPosition = _originValue;
+                rectTransform.anchoredPosition = originPosition;
             }
 
             public override void ResetToEnd()
             {
-                _rectTransform.anchoredPosition = _destValue;
+                rectTransform.anchoredPosition = destPosition;
             }
         }
     }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8776168773291331724}
   - component: {fileID: 5146700175853159154}
   - component: {fileID: 4971953261553319550}
+  - component: {fileID: 8937331576559923062}
   m_Layer: 0
   m_Name: SDManager
   m_TagString: Untagged
@@ -46,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdd45d3ee96c904aa00cca570f504fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetFPS: 60
-  _isRunInBackground: 1
-  _isNeverSleep: 1
-  _screenOrientation: 1
+  targetFPS: 300
+  runInBackground: 1
+  neverSleep: 1
+  screenOrientation: 3
 --- !u!114 &8776168773291331724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,5 +85,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c033f80189d2a32448f2017361bd76f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8937331576559923062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217961079233636731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80f3de5b79bbd874f92b6e9840f7608f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

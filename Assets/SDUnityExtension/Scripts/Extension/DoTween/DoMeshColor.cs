@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DG
 {
@@ -8,33 +9,33 @@ namespace DG
     {
         public class DoMeshColor : DoBase
         {
-            [SerializeField] protected Renderer _renderer;
-            [SerializeField] protected Color _originColor = Color.white;
-            [SerializeField] protected Color _destColor = Color.white;
+            [SerializeField] protected MeshRenderer meshRenderer;
+            [SerializeField] protected Color originColor = Color.white;
+            [SerializeField] protected Color destColor = Color.white;
 
             private void Awake()
             {
-                if (_renderer == null) _renderer = GetComponent<Renderer>();
+                if (meshRenderer == null) meshRenderer = GetComponent<MeshRenderer>();
             }
 
             public override Tween GetTween()
             {
-                return _renderer.material.DOColor(_destColor, _duration).SetEase(_ease);
+                return meshRenderer.material.DOColor(destColor, duration).SetEase(ease);
             }
 
             public override Tween GetReversedTween()
             {
-                return _renderer.material.DOColor(_originColor, _duration).SetEase(_ease);
+                return meshRenderer.material.DOColor(originColor, duration).SetEase(ease);
             }
 
             public override void ResetToStart()
             {
-                _renderer.material.color = _originColor;
+                meshRenderer.material.color = originColor;
             }
 
             public override void ResetToEnd()
             {
-                _renderer.material.color = _destColor;
+                meshRenderer.material.color = destColor;
             }
         }
     }

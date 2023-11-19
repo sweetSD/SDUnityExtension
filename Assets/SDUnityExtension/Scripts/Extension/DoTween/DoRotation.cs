@@ -8,24 +8,33 @@ namespace DG
     {
         public class DoRotation : DoBase
         {
+            [SerializeField] private Vector3 originRotation;
+            [SerializeField] private Vector3 destRotation;
+            [SerializeField] private Space space = Space.World;
+            [SerializeField] private RotateMode mode = RotateMode.FastBeyond360;
+            
             public override Tween GetTween()
             {
-                return transform.DOLocalRotate(_destValue, _duration).SetEase(_ease);
+                if (space == Space.World)
+                    return transform.DORotate(destRotation, duration, mode).SetEase(ease);
+                return transform.DOLocalRotate(destRotation, duration, mode).SetEase(ease);
             }
 
             public override Tween GetReversedTween()
             {
-                return transform.DOLocalRotate(_originValue, _duration).SetEase(_ease);
+                if (space == Space.World)
+                    return transform.DORotate(originRotation, duration, mode).SetEase(ease);
+                return transform.DOLocalRotate(originRotation, duration, mode).SetEase(ease);
             }
 
             public override void ResetToStart()
             {
-                transform.localEulerAngles = _originValue;
+                transform.localEulerAngles = originRotation;
             }
 
             public override void ResetToEnd()
             {
-                transform.localEulerAngles = _destValue;
+                transform.localEulerAngles = destRotation;
             }
         }
     }

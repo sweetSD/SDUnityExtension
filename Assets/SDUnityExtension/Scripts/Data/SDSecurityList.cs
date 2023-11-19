@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SDUnityExtension.Scripts.Manager;
 
 /// <summary>
 /// 데이터를 암호화 / 복호화하여 데이터를 관리하는 List입니다.

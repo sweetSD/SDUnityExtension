@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace DG
@@ -9,31 +10,33 @@ namespace DG
     {
         public class DoUIFill : DoBase
         {
-            [SerializeField] protected Image _image;
+            [SerializeField] protected Image image;
+            [SerializeField] protected float originFillAmount;
+            [SerializeField] protected float destFillAmount;
 
             private void Awake()
             {
-                if (_image == null) _image = GetComponent<Image>();
+                if (image == null) image = GetComponent<Image>();
             }
 
             public override Tween GetTween()
             {
-                return _image.DOFillAmount(Mathf.Clamp(_destValue.x, 0, 1), _duration).SetEase(_ease);
+                return image.DOFillAmount(Mathf.Clamp(destFillAmount, 0, 1), duration).SetEase(ease);
             }
 
             public override Tween GetReversedTween()
             {
-                return _image.DOFillAmount(Mathf.Clamp(_originValue.x, 0, 1), _duration).SetEase(_ease);
+                return image.DOFillAmount(Mathf.Clamp(originFillAmount, 0, 1), duration).SetEase(ease);
             }
 
             public override void ResetToStart()
             {
-                _image.fillAmount = Mathf.Clamp(_originValue.x, 0, 1);
+                image.fillAmount = Mathf.Clamp(originFillAmount, 0, 1);
             }
 
             public override void ResetToEnd()
             {
-                _image.fillAmount = Mathf.Clamp(_destValue.x, 0, 1);
+                image.fillAmount = Mathf.Clamp(destFillAmount, 0, 1);
             }
         }
     }

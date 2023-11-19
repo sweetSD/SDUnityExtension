@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace DG
@@ -9,61 +7,59 @@ namespace DG
     {
         public abstract class DoBase : MonoBehaviour
         {
-            [SerializeField] protected Vector3 _originValue;
-            [SerializeField] protected Vector3 _destValue;
-            [SerializeField] protected bool _playOrigin = true;
-            [SerializeField] protected bool _playOnEnable = true;
-            [SerializeField] protected float _startDelay = 0f;
-            [SerializeField] protected float _startReverseDelay = 0f;
-            [SerializeField] protected float _duration = 1f;
-            [SerializeField] protected int _loopCount = 0;
-            [SerializeField] protected LoopType _loopType = LoopType.Restart;
-            [SerializeField] protected Ease _ease = Ease.Linear;
-            [SerializeField] protected UpdateType _updateType = UpdateType.Normal;
-            [SerializeField] protected UnityEvent _onComplete;
+            [SerializeField] protected bool playOrigin = true;
+            [SerializeField] protected bool playOnEnable = true;
+            [SerializeField] protected float startDelay = 0f;
+            [SerializeField] protected float startReverseDelay = 0f;
+            [SerializeField] protected float duration = 1f;
+            [SerializeField] protected int loopCount = 0;
+            [SerializeField] protected LoopType loopType = LoopType.Restart;
+            [SerializeField] protected Ease ease = Ease.Linear;
+            [SerializeField] protected UpdateType updateType = UpdateType.Normal;
+            [SerializeField] protected UnityEvent onComplete;
             protected Sequence _sequence = null;
 
             public Tween Tween => _sequence;
-            public UnityEvent onComplete => _onComplete;
+            public UnityEvent OnComplete => onComplete;
 
             private void OnEnable()
             {
-                if (_playOnEnable) DOPlay();
+                if (playOnEnable) DoPlay();
             }
 
-            public virtual void DOPlay()
+            public virtual void DoPlay()
             {
                 InitializeTween();
-                if (_playOrigin) ResetToStart();
-                _sequence.SetDelay(_startDelay);
-                _sequence.SetLoops(_loopCount, _loopType);
-                _sequence.SetUpdate(_updateType);
-                _sequence.OnComplete(() => _onComplete?.Invoke());
+                if (playOrigin) ResetToStart();
+                _sequence.SetDelay(startDelay);
+                _sequence.SetLoops(loopCount, loopType);
+                _sequence.SetUpdate(updateType);
+                _sequence.OnComplete(() => onComplete?.Invoke());
                 _sequence.Play();
             }
 
             public virtual void DoPlayReverse()
             {
                 InitializeReversedTween();
-                if (_playOrigin) ResetToEnd();
-                _sequence.SetDelay(_startReverseDelay);
-                _sequence.SetLoops(_loopCount, _loopType);
-                _sequence.SetUpdate(_updateType);
-                _sequence.OnComplete(() => _onComplete?.Invoke());
+                if (playOrigin) ResetToEnd();
+                _sequence.SetDelay(startReverseDelay);
+                _sequence.SetLoops(loopCount, loopType);
+                _sequence.SetUpdate(updateType);
+                _sequence.OnComplete(() => onComplete?.Invoke());
                 _sequence.Play();
             }
 
-            public virtual void DOPause()
+            public virtual void DoPause()
             {
                 if (_sequence != null) _sequence.Pause();
             }
 
-            public virtual void DOResume()
+            public virtual void DoResume()
             {
                 if (_sequence != null) _sequence.Play();
             }
 
-            public virtual void DOStop()
+            public virtual void DoStop()
             {
                 if (_sequence != null) _sequence.Kill();
                 _sequence = null;

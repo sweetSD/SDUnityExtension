@@ -1,27 +1,32 @@
-﻿namespace DG
+﻿using UnityEngine;
+
+namespace DG
 {
     namespace Tweening
     {
         public class DoScale : DoBase
         {
+            [SerializeField] private Vector3 originScale;
+            [SerializeField] private Vector3 destScale;
+            
             public override Tween GetTween()
             {
-                return transform.DOScale(_destValue, _duration).SetEase(_ease);
+                return transform.DOScale(destScale, duration).SetEase(ease);
             }
 
             public override Tween GetReversedTween()
             {
-                return transform.DOScale(_originValue, _duration).SetEase(_ease);
+                return transform.DOScale(originScale, duration).SetEase(ease);
             }
 
             public override void ResetToStart()
             {
-                transform.localScale = _originValue;
+                transform.localScale = originScale;
             }
 
             public override void ResetToEnd()
             {
-                transform.localScale = _destValue;
+                transform.localScale = destScale;
             }
         }
     }

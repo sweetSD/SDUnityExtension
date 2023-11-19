@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SDUnityExtension.Scripts.Manager;
 
 public class SDSecurityDictionary
 {
