@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SDUnityExtension.Scripts.Extension;
 using UnityEngine;
 
 namespace SDUnityExtension.Scripts.Pattern

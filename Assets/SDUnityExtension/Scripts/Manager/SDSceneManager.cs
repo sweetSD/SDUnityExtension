@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Cysharp.Threading.Tasks;
+using SDUnityExtension.Scripts.Extension;
 using SDUnityExtension.Scripts.Pattern;
 using UnityEngine;
 using UnityEngine.SceneManagement;
