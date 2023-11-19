@@ -1,22 +1,33 @@
+using UnityEngine;
+
 namespace DG
 {
     namespace Tweening
     {
         public class DoPunchRotation : DoBase
         {
+            [SerializeField] private Vector3 originRotation;
+            [SerializeField] private Vector3 destRotation;
+            
             public override Tween GetTween()
             {
-                return transform.DOPunchRotation(_destValue, _duration).SetEase(_ease);
+                return transform.DOPunchRotation(destRotation, duration).SetEase(ease);
             }
 
             public override Tween GetReversedTween()
             {
-                return transform.DOPunchRotation(_originValue, _duration).SetEase(_ease);
+                return transform.DOPunchRotation(originRotation, duration).SetEase(ease);
             }
 
-            public override void ResetToStart() { }
+            public override void ResetToStart()
+            {
+                transform.eulerAngles = originRotation;
+            }
 
-            public override void ResetToEnd() { }
+            public override void ResetToEnd()
+            {
+                transform.eulerAngles = destRotation;
+            }
         }
     }
 }

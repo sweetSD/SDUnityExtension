@@ -28,12 +28,18 @@ namespace DG
 
             public override void ResetToStart()
             {
-                transform.position = originPosition;
+                if (space == Space.World)
+                    transform.position = originPosition;
+                else
+                    transform.localPosition = originPosition;
             }
 
             public override void ResetToEnd()
             {
-                transform.position = destPosition;
+                if (space == Space.World)
+                    transform.position = originPosition;
+                else
+                    transform.localPosition = originPosition;
             }
         }
 

@@ -48,11 +48,7 @@ public class NetworkImage : MonoBehaviour
             {
                 yield return uwr.SendWebRequest();
 
-                if (uwr.isNetworkError || uwr.isHttpError)
-                {
-                    Debug.LogError(uwr.error);
-                }
-                else
+                if (uwr.result == UnityWebRequest.Result.Success)
                 {
                     var texture = DownloadHandlerTexture.GetContent(uwr);
                     image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector3.one * 0.5f);
@@ -62,6 +58,10 @@ public class NetworkImage : MonoBehaviour
                         var bytes = texture.EncodeToPNG();
                         File.WriteAllBytes(path, bytes);
                     }
+                }
+                else
+                {
+                    Debug.LogError(uwr.error);
                 }
 
             }

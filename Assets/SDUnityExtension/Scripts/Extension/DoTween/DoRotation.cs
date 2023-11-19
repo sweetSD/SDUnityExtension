@@ -29,12 +29,18 @@ namespace DG
 
             public override void ResetToStart()
             {
-                transform.localEulerAngles = originRotation;
+                if (space == Space.World)
+                    transform.eulerAngles = originRotation;
+                else
+                    transform.localEulerAngles = originRotation;
             }
 
             public override void ResetToEnd()
             {
-                transform.localEulerAngles = destRotation;
+                if (space == Space.World)
+                    transform.eulerAngles = destRotation;
+                else
+                    transform.localEulerAngles = destRotation;
             }
         }
     }
