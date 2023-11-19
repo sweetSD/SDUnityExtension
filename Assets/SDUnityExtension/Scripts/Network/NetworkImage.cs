@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using SDUnityExtension.Scripts.Extension;
@@ -27,6 +28,11 @@ namespace SDUnityExtension.Scripts.Network
 
         [SerializeField] private Image image;
         [SerializeField] private bool useCache = true;
+
+        private void OnValidate()
+        {
+            if (image == null) image = GetComponent<Image>();
+        }
 
         private void Start()
         {
