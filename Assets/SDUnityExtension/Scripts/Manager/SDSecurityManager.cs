@@ -10,7 +10,6 @@ namespace SDUnityExtension.Scripts.Manager
     /// 
     /// AES256을 사용하는 보안 스크립트입니다.
     /// _securityKey와 _securityIv를 직접 설정하여 사용해주세요.
-    /// 
     /// </summary>
     public static class SDSecurityManager
     {
@@ -30,8 +29,6 @@ namespace SDUnityExtension.Scripts.Manager
         /// <summary>
         /// 주어진 데이터를 AES256으로 암호화(Encrypt) 합니다.
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
         public static string Encrypt(string data)
         {
             if (data.IsEmpty()) return string.Empty;
@@ -48,8 +45,6 @@ namespace SDUnityExtension.Scripts.Manager
         /// <summary>
         /// 주어진 데이터를 AES256으로 복호화(Decrypt) 합니다.
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
         public static string Decrypt(string data)
         {
             if (data.IsEmpty()) return string.Empty;
