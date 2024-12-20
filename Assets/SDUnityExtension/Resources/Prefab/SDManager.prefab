@@ -10,9 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9222512167416742356}
   - component: {fileID: 2581001986897873297}
-  - component: {fileID: 8776168773291331724}
   - component: {fileID: 5146700175853159154}
-  - component: {fileID: 4971953261553319550}
   - component: {fileID: 8937331576559923062}
   m_Layer: 0
   m_Name: SDManager
@@ -31,6 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -51,18 +50,6 @@ MonoBehaviour:
   runInBackground: 1
   neverSleep: 1
   screenOrientation: 3
---- !u!114 &8776168773291331724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1217961079233636731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2108d168d5ba38f4090b80a32e6a03ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5146700175853159154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,18 +60,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2385d801886ef29469b6b10587a22060, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4971953261553319550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1217961079233636731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c033f80189d2a32448f2017361bd76f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &8937331576559923062

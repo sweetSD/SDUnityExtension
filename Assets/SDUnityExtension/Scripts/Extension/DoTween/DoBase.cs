@@ -1,91 +1,108 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using UnityEngine;
 using UnityEngine.Events;
 
-namespace DG
+namespace SDUnityExtension.Scripts.Extension.DoTween
 {
-    namespace Tweening
+    public abstract class DoBase : MonoBehaviour
     {
-        public abstract class DoBase : MonoBehaviour
+        [SerializeField] protected bool playOrigin = true;
+        [SerializeField] protected bool playOnEnable = true;
+        [SerializeField] protected float startDelay = 0f;
+        [SerializeField] protected float startReverseDelay = 0f;
+        [SerializeField] protected float duration = 1f;
+        [SerializeField] protected int loopCount = 0;
+        [SerializeField] protected bool isIndependentUpdate = false;
+        [SerializeField] protected LoopType loopType = LoopType.Restart;
+        [SerializeField] protected Ease ease = Ease.OutQuad;
+        [SerializeField] protected UpdateType updateType = UpdateType.Normal;
+        [SerializeField] protected UnityEvent onComplete;
+        [SerializeField] protected UnityEvent onReverseComplete;
+        protected Sequence sequence = null;
+
+        private void OnEnable()
         {
-            [SerializeField] protected bool playOrigin = true;
-            [SerializeField] protected bool playOnEnable = true;
-            [SerializeField] protected float startDelay = 0f;
-            [SerializeField] protected float startReverseDelay = 0f;
-            [SerializeField] protected float duration = 1f;
-            [SerializeField] protected int loopCount = 0;
-            [SerializeField] protected LoopType loopType = LoopType.Restart;
-            [SerializeField] protected Ease ease = Ease.Linear;
-            [SerializeField] protected UpdateType updateType = UpdateType.Normal;
-            [SerializeField] protected UnityEvent onComplete;
-            protected Sequence _sequence = null;
-
-            public Tween Tween => _sequence;
-            public UnityEvent OnComplete => onComplete;
-
-            private void OnEnable()
+            if (playOnEnable)
             {
-                if (playOnEnable) DoPlay();
+                DoPlay();
             }
-
-            public virtual void DoPlay()
-            {
-                InitializeTween();
-                if (playOrigin) ResetToStart();
-                _sequence.SetDelay(startDelay);
-                _sequence.SetLoops(loopCount, loopType);
-                _sequence.SetUpdate(updateType);
-                _sequence.OnComplete(() => onComplete?.Invoke());
-                _sequence.Play();
-            }
-
-            public virtual void DoPlayReverse()
-            {
-                InitializeReversedTween();
-                if (playOrigin) ResetToEnd();
-                _sequence.SetDelay(startReverseDelay);
-                _sequence.SetLoops(loopCount, loopType);
-                _sequence.SetUpdate(updateType);
-                _sequence.OnComplete(() => onComplete?.Invoke());
-                _sequence.Play();
-            }
-
-            public virtual void DoPause()
-            {
-                if (_sequence != null) _sequence.Pause();
-            }
-
-            public virtual void DoResume()
-            {
-                if (_sequence != null) _sequence.Play();
-            }
-
-            public virtual void DoStop()
-            {
-                if (_sequence != null) _sequence.Kill();
-                _sequence = null;
-            }
-
-            public void InitializeTween()
-            {
-                if (_sequence != null) _sequence.Kill();
-                _sequence = DOTween.Sequence();
-                _sequence.Append(GetTween());
-            }
-
-            public void InitializeReversedTween()
-            {
-                if (_sequence != null) _sequence.Kill();
-                _sequence = DOTween.Sequence();
-                _sequence.Append(GetReversedTween());
-            }
-
-            public abstract Tween GetTween();
-
-            public abstract Tween GetReversedTween();
-
-            public abstract void ResetToStart();
-
-            public abstract void ResetToEnd();
         }
+
+        public virtual async UniTask DoPlayAsync()
+        {
+            InitializeTween();
+            if (playOrigin)
+            {
+                ResetToStart();
+            }
+            sequence.SetDelay(startDelay);
+            sequence.SetLoops(loopCount, loopType);
+            sequence.SetUpdate(updateType);
+            sequence.OnComplete(() => onComplete?.Invoke());
+            await sequence.Play().AsyncWaitForCompletion();
+        }
+
+        public void DoPlay()
+        {
+            DoPlayAsync().Forget();
+        }
+
+        public virtual async UniTask DoPlayReverseAsync()
+        {
+            InitializeReversedTween();
+            if (playOrigin)
+            {
+                ResetToEnd();
+            }
+            sequence.SetDelay(startReverseDelay);
+            sequence.SetLoops(loopCount, loopType);
+            sequence.SetUpdate(updateType);
+            sequence.OnComplete(() => onReverseComplete?.Invoke());
+            await sequence.Play().AsyncWaitForCompletion();
+        }
+
+        public void DoPlayReverse()
+        {
+            DoPlayReverseAsync().Forget();
+        }
+
+        public virtual void DoPause()
+        {
+            sequence?.Pause();
+        }
+
+        public virtual void DoResume()
+        {
+            sequence?.Play();
+        }
+
+        public virtual void DoStop()
+        {
+            sequence?.Kill();
+            sequence = null;
+        }
+
+        public void InitializeTween()
+        {
+            sequence?.Kill();
+            sequence = DOTween.Sequence();
+            sequence.Append(GetTween());
+        }
+
+        public void InitializeReversedTween()
+        {
+            sequence?.Kill();
+            sequence = DOTween.Sequence();
+            sequence.Append(GetReversedTween());
+        }
+
+        public abstract Tween GetTween();
+
+        public abstract Tween GetReversedTween();
+
+        public abstract void ResetToStart();
+
+        public abstract void ResetToEnd();
     }
 }

@@ -1,42 +1,40 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace DG
+namespace SDUnityExtension.Scripts.Extension.DoTween
 {
-    namespace Tweening
+    public class DoUIPosition : DoBase
     {
-        public class DoUIPosition : DoBase
+        [SerializeField] private RectTransform rectTransform;
+        [SerializeField] private Vector2 originPosition;
+        [SerializeField] private Vector2 destPosition;
+
+        private void Awake()
         {
-            [SerializeField] private RectTransform rectTransform;
-            [SerializeField] private Vector2 originPosition;
-            [SerializeField] private Vector2 destPosition;
-
-            private void Awake()
+            if (rectTransform == null)
             {
-                if (rectTransform == null) rectTransform = GetComponent<RectTransform>();
+                rectTransform = transform as RectTransform;
             }
+        }
 
-            public override Tween GetTween()
-            {
-                return rectTransform.DOAnchorPos(destPosition, duration).SetEase(ease);
-            }
+        public override Tween GetTween()
+        {
+            return rectTransform.DOAnchorPos(destPosition, duration).SetEase(ease);
+        }
 
-            public override Tween GetReversedTween()
-            {
-                return rectTransform.DOAnchorPos(originPosition, duration).SetEase(ease);
-            }
+        public override Tween GetReversedTween()
+        {
+            return rectTransform.DOAnchorPos(originPosition, duration).SetEase(ease);
+        }
 
-            public override void ResetToStart()
-            {
-                rectTransform.anchoredPosition = originPosition;
-            }
+        public override void ResetToStart()
+        {
+            rectTransform.anchoredPosition = originPosition;
+        }
 
-            public override void ResetToEnd()
-            {
-                rectTransform.anchoredPosition = destPosition;
-            }
+        public override void ResetToEnd()
+        {
+            rectTransform.anchoredPosition = destPosition;
         }
     }
 }

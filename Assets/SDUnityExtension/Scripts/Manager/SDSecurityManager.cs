@@ -5,12 +5,6 @@ using SDUnityExtension.Scripts.Extension;
 
 namespace SDUnityExtension.Scripts.Manager
 {
-    /// <summary>
-    /// Created by sweetSD. (static class)
-    /// 
-    /// AES256을 사용하는 보안 스크립트입니다.
-    /// _securityKey와 _securityIv를 직접 설정하여 사용해주세요.
-    /// </summary>
     public static class SDSecurityManager
     {
         private static readonly string securityKey = "fiwkdu876au6w5uj";

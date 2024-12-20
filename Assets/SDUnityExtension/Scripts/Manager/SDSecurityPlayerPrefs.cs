@@ -2,13 +2,6 @@
 
 namespace SDUnityExtension.Scripts.Manager
 {
-    /// <summary>
-    /// Created by sweetSD. (static class)
-    /// 
-    /// Unity의 PlayerPrefs를 좀 더 안전하게 사용할 수 있도록
-    /// AES256을 이용하여 복호화하여 저장합니다.
-    /// 
-    /// </summary>
     public class SDSecurityPlayerPrefs
     {
         public static bool HasKey(string key)
@@ -48,11 +41,7 @@ namespace SDUnityExtension.Scripts.Manager
 
         public static int GetInt(string key, int defaultValue = 0)
         {
-            if (int.TryParse(SDSecurityManager.Decrypt(PlayerPrefs.GetString(key, string.Empty)), out var value))
-            {
-                return value;
-            }
-            return defaultValue;
+            return int.TryParse(SDSecurityManager.Decrypt(PlayerPrefs.GetString(key, string.Empty)), out var value) ? value : defaultValue;
         }
 
         public static string GetString(string key, string defaultValue = "")
@@ -62,11 +51,7 @@ namespace SDUnityExtension.Scripts.Manager
 
         public static float GetFloat(string key, float defaultValue = 0f)
         {
-            if (float.TryParse(SDSecurityManager.Decrypt(PlayerPrefs.GetString(key, string.Empty)), out var value))
-            {
-                return value;
-            }
-            return defaultValue;
+            return float.TryParse(SDSecurityManager.Decrypt(PlayerPrefs.GetString(key, string.Empty)), out var value) ? value : defaultValue;
         }
     }
 }

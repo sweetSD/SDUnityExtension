@@ -3,13 +3,6 @@ using UnityEngine;
 
 namespace SDUnityExtension.Scripts.Manager
 {
-    /// <summary>
-    /// Created by sweetSD. (with Singleton)
-    /// 
-    /// 디바이스 정보 매니저 스크립트입니다.
-    /// 
-    /// </summary>
-
     public enum ToastLength
     {
         Short = 0,
@@ -63,15 +56,8 @@ namespace SDUnityExtension.Scripts.Manager
                 Screen.orientation = screenOrientation;
             }
         }
-
-        /// <summary>
-        /// 화면 가로 길이
-        /// </summary>
+        
         public float ScreenWidth => Screen.width;
-
-        /// <summary>
-        /// 화면 세로 길이
-        /// </summary>
         public float ScreenHeight => Screen.height;
 
         private void Awake()

@@ -17,7 +17,7 @@ namespace SDUnityExtension.Scripts.Manager
             }
         }
     
-        async UniTaskVoid DelayedEvent(float delay, UnityEvent uEvent)
+        private async UniTaskVoid DelayedEvent(float delay, UnityEvent uEvent)
         {
             if (delay > 0)
                 await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: this.GetCancellationTokenOnDestroy());

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.IO;
+﻿using System.IO;
 using Cysharp.Threading.Tasks;
 using SDUnityExtension.Scripts.Extension;
 using UnityEngine;
@@ -12,41 +10,41 @@ namespace SDUnityExtension.Scripts.Network
     [RequireComponent(typeof(Image))]
     public class NetworkImage : MonoBehaviour
     {
-        [SerializeField] private string currentUrl;
+        [SerializeField] private string url;
         public string Url
         {
-            get => currentUrl;
+            get => url;
             set 
             {
-                currentUrl = value;
-                LoadImageFromUrl(currentUrl, useCache).ContinueWith(e =>
+                url = value;
+                LoadImageFromUrl(url, useCache).ContinueWith(e =>
                 {
-                    image.sprite = Sprite.Create(e, new Rect(0, 0, e.width, e.height), Vector3.one * 0.5f);
+                    targetImage.sprite = Sprite.Create(e, new Rect(0, 0, e.width, e.height), Vector3.one * 0.5f);
                 }).Forget();
             }
         }   
 
-        [SerializeField] private Image image;
+        [SerializeField] private Image targetImage;
         [SerializeField] private bool useCache = true;
-
-        private void OnValidate()
-        {
-            if (image == null) image = GetComponent<Image>();
-        }
 
         private void Start()
         {
-            if (image == null) image = GetComponent<Image>();
-            if (currentUrl.IsNotEmpty()) Url = currentUrl;
+            if (targetImage == null) targetImage = GetComponent<Image>();
+            if (url.IsNotEmpty()) Url = url;
         }
 
         public static async UniTask<Texture2D> LoadImageFromUrl(string url, bool useCache = true)
         {
             Texture2D image = null;
-            string directoryPath = Application.persistentDataPath + "/Cache/";
-            string path = directoryPath + url.GetHashCode() + ".png";
-            if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
-            if (File.Exists(path) && useCache)
+            string directoryPath = $"{Application.persistentDataPath}/Cache";
+            string path = $"{directoryPath}/{url.GetHashCode()}";
+            
+            if (useCache && Directory.Exists(directoryPath) == false)
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+            
+            if (useCache && File.Exists(path))
             {
                 var bytes = await File.ReadAllBytesAsync(path);
                 var texture = new Texture2D(2, 2);
@@ -67,11 +65,9 @@ namespace SDUnityExtension.Scripts.Network
                     var texture = DownloadHandlerTexture.GetContent(uwr);
                     image = texture;
 
-                    if(useCache)
-                    {
-                        var bytes = texture.EncodeToPNG();
-                        await File.WriteAllBytesAsync(path, bytes);
-                    }
+                    if (useCache == false) return image;
+                    var bytes = texture.EncodeToPNG();
+                    await File.WriteAllBytesAsync(path, bytes);
                 }
                 else
                 {

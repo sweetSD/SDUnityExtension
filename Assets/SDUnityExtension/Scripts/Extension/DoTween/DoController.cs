@@ -1,58 +1,80 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using SDUnityExtension.Scripts.Extension;
-using UnityEngine;
-using UnityEngine.Serialization;
-#if ODIN_INSPECTOR
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
-#endif
+using UnityEngine;
 
-namespace DG
+namespace SDUnityExtension.Scripts.Extension.DoTween
 {
-    namespace Tweening
+    public class DoController : MonoBehaviour
     {
-        public class DoController : MonoBehaviour
-        {
-            [SerializeField] private List<DoBase> doBases;
+        [SerializeField] private List<DoBase> doBases;
+        private readonly LinkedList<UniTask> playingTasks = new();
+        private CancellationTokenSource tweenCts;
 
 #if ODIN_INSPECTOR
-            [Button]
-            private void GetDoBases()
-            {
-                doBases = GetComponents<DoBase>().ToList();
-            }
-            
-            [Button]
-            private void GetChildrenDoBases()
-            {
-                doBases = GetComponentsInChildren<DoBase>().ToList();
-            }
+        [Button]
+        private void GetDoBases()
+        {
+            doBases = GetComponents<DoBase>().ToList();
+        }
+        
+        [Button]
+        private void GetChildrenDoBases()
+        {
+            doBases = GetComponentsInChildren<DoBase>().ToList();
+        }
 #endif
 
-            public void Play(float delay = 0)
+        public async UniTask Play(float delay = 0)
+        {
+            Stop();
+            tweenCts = new();
+            var token = tweenCts.Token;
+            ResetToStart();
+            await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+            if (token.IsCancellationRequested) return;
+            playingTasks.Clear();
+            foreach (var tween in doBases)
             {
-                StartCoroutine(CO_Play(delay));
+                var task = tween.DoPlayAsync();
+                playingTasks.AddLast(task);
             }
-
-            private IEnumerator CO_Play(float delay)
-            {
-                yield return SDCache.WaitForSeconds(delay);
-                for (int i = 0; i < doBases.Count; i++) doBases[i].DoPlay();
-            }
-
-            public void PlayReverse(float delay = 0)
-            {
-                StartCoroutine(CO_PlayReverse(delay));
-            }
-
-            private IEnumerator CO_PlayReverse(float delay)
-            {
-                yield return SDCache.WaitForSeconds(delay);
-                for (int i = 0; i < doBases.Count; i++) doBases[i].DoPlayReverse();
-            }
+            await UniTask.WhenAll(playingTasks).AttachExternalCancellation(token);
         }
 
+        public async UniTask PlayReverse(float delay = 0)
+        {
+            Stop();
+            tweenCts = new();
+            var token = tweenCts.Token;
+            ResetToEnd();
+            await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+            if (token.IsCancellationRequested) return;
+            playingTasks.Clear();
+            foreach (var tween in doBases)
+            {
+                var task = tween.DoPlayReverseAsync();
+                playingTasks.AddLast(task);
+            }
+            await UniTask.WhenAll(playingTasks).AttachExternalCancellation(token);
+        }
+        
+        public void Pause() => doBases.ForEach(tween => tween.DoPause());
+        
+        public void Resume() => doBases.ForEach(tween => tween.DoResume());
+        
+        public void Stop()
+        {
+            tweenCts?.Cancel();
+            tweenCts?.Dispose();
+            doBases.ForEach(tween => tween.DoStop());
+        }
+
+        public void ResetToStart() => doBases.ForEach(tween => tween.ResetToStart());
+        
+        public void ResetToEnd() => doBases.ForEach(tween => tween.ResetToEnd());
     }
 }

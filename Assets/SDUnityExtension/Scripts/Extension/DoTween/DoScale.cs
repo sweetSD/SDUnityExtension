@@ -1,33 +1,31 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
-namespace DG
+namespace SDUnityExtension.Scripts.Extension.DoTween
 {
-    namespace Tweening
+    public class DoScale : DoBase
     {
-        public class DoScale : DoBase
-        {
-            [SerializeField] private Vector3 originScale;
-            [SerializeField] private Vector3 destScale;
+        [SerializeField] private Vector3 originScale;
+        [SerializeField] private Vector3 destScale;
             
-            public override Tween GetTween()
-            {
-                return transform.DOScale(destScale, duration).SetEase(ease);
-            }
+        public override Tween GetTween()
+        {
+            return transform.DOScale(destScale, duration).SetEase(ease);
+        }
 
-            public override Tween GetReversedTween()
-            {
-                return transform.DOScale(originScale, duration).SetEase(ease);
-            }
+        public override Tween GetReversedTween()
+        {
+            return transform.DOScale(originScale, duration).SetEase(ease);
+        }
 
-            public override void ResetToStart()
-            {
-                transform.localScale = originScale;
-            }
+        public override void ResetToStart()
+        {
+            transform.localScale = originScale;
+        }
 
-            public override void ResetToEnd()
-            {
-                transform.localScale = destScale;
-            }
+        public override void ResetToEnd()
+        {
+            transform.localScale = destScale;
         }
     }
 }

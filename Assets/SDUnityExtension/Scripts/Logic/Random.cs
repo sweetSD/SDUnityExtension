@@ -35,11 +35,9 @@ namespace SDUnityExtension.Scripts.Logic
                 shuffledCases = randomCases.OrderBy(e => Guid.NewGuid()).ToList();
             }
 
-            if (shuffledCases.Count > 0)
-            {
-                RegistEvents(shuffledCases[0].events);
-                shuffledCases.RemoveAt(0);
-            }
+            if (shuffledCases.Count <= 0) return;
+            RegistEvents(shuffledCases[0].events);
+            shuffledCases.RemoveAt(0);
         }
     }
 }

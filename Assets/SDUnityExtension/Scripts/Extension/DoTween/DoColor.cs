@@ -1,42 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace DG
+namespace SDUnityExtension.Scripts.Extension.DoTween
 {
-    namespace Tweening
+    public class DoColor : DoBase
     {
-        public class DoColor : DoBase
+        [SerializeField] protected SpriteRenderer spriteRenderer;
+        [SerializeField] protected Color originColor = Color.white;
+        [SerializeField] protected Color destColor = Color.white;
+
+        private void Awake()
         {
-            [SerializeField] protected SpriteRenderer spriteRenderer;
-            [SerializeField] protected Color originColor = Color.white;
-            [SerializeField] protected Color destColor = Color.white;
+            if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+        }
 
-            private void Awake()
-            {
-                if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
-            }
+        public override Tween GetTween()
+        {
+            return spriteRenderer.DOColor(destColor, duration).SetEase(ease);
+        }
 
-            public override Tween GetTween()
-            {
-                return spriteRenderer.DOColor(destColor, duration).SetEase(ease);
-            }
+        public override Tween GetReversedTween()
+        {
+            return spriteRenderer.DOColor(originColor, duration).SetEase(ease);
+        }
 
-            public override Tween GetReversedTween()
-            {
-                return spriteRenderer.DOColor(originColor, duration).SetEase(ease);
-            }
+        public override void ResetToStart()
+        {
+            spriteRenderer.color = originColor;
+        }
 
-            public override void ResetToStart()
-            {
-                spriteRenderer.color = originColor;
-            }
-
-            public override void ResetToEnd()
-            {
-                spriteRenderer.color = destColor;
-            }
+        public override void ResetToEnd()
+        {
+            spriteRenderer.color = destColor;
         }
     }
 }
